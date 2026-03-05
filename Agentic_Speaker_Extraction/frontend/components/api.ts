@@ -5,23 +5,53 @@ function apiUrl(path: string): string {
   return `${API_BASE}${normalizedPath}`;
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
-  const response = await fetch(apiUrl(path), { cache: "no-store" });
+function responseSnippet(raw: string, max = 160): string {
+  return raw.replace(/\s+/g, " ").trim().slice(0, max);
+}
+
+async function parseJsonResponse<T>(method: string, path: string, response: Response): Promise<T> {
+  const contentType = response.headers.get("content-type") ?? "";
+  const raw = await response.text();
+
   if (!response.ok) {
-    throw new Error(`GET ${path} failed: ${response.status}`);
+    const suffix = raw ? ` ${responseSnippet(raw)}` : "";
+    throw new Error(`${method} ${path} failed: ${response.status}${suffix}`);
   }
-  return response.json() as Promise<T>;
+
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      `${method} ${path} expected JSON but got ${contentType || "unknown content-type"}: ${responseSnippet(raw)}`,
+    );
+  }
+
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    throw new Error(`${method} ${path} returned invalid JSON: ${responseSnippet(raw)}`);
+  }
+}
+
+const API_SHARED_HEADERS = {
+  Accept: "application/json",
+  "ngrok-skip-browser-warning": "true",
+};
+
+export async function apiGet<T>(path: string): Promise<T> {
+  const response = await fetch(apiUrl(path), {
+    cache: "no-store",
+    headers: API_SHARED_HEADERS,
+  });
+  return parseJsonResponse<T>("GET", path, response);
 }
 
 export async function apiPost<T>(path: string, payload: unknown): Promise<T> {
   const response = await fetch(apiUrl(path), {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      ...API_SHARED_HEADERS,
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(payload),
   });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`POST ${path} failed: ${response.status} ${text}`);
-  }
-  return response.json() as Promise<T>;
+  return parseJsonResponse<T>("POST", path, response);
 }

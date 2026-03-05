@@ -27,6 +27,10 @@
    - `API_PROXY_TARGET=https://b599-171-76-80-80.ngrok-free.app/api/v1`
 5. Deploy.
 6. If ngrok URL changes, update `API_PROXY_TARGET` in Vercel and trigger a redeploy.
+7. If UI shows `Unexpected token '<'`, your API call is receiving HTML (not JSON). Verify:
+   - `NEXT_PUBLIC_API_BASE` is exactly `/api/v1` (not an ngrok URL)
+   - `API_PROXY_TARGET` points to the live ngrok backend with `/api/v1`
+   - redeploy with build cache disabled
 
 ## Test
 - `cd backend && TEST_POSTGRES_URL=postgresql://dhanush:password@localhost:5432/test_scraper_tests pytest -q`
