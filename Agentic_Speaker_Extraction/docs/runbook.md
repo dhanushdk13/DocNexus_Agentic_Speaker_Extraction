@@ -24,7 +24,7 @@
 3. Keep **Framework Preset** as `Next.js`.
 4. Add project environment variables (Preview + Production):
    - `NEXT_PUBLIC_API_BASE=/api/v1`
-   - `API_PROXY_TARGET=https://b599-171-76-80-80.ngrok-free.app/api/v1`
+   - `API_PROXY_TARGET=https://6c31-2a09-bac6-d9d3-eaa-00-176-a2.ngrok-free.app/api/v1`
 5. Deploy.
 6. If ngrok URL changes, update `API_PROXY_TARGET` in Vercel and trigger a redeploy.
 7. If UI shows `Unexpected token '<'`, your API call is receiving HTML (not JSON). Verify:

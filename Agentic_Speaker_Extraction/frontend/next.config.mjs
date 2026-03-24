@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const API_PROXY_TARGET = (process.env.API_PROXY_TARGET || "https://b599-171-76-80-80.ngrok-free.app/api/v1").replace(
+const API_PROXY_TARGET = (process.env.API_PROXY_TARGET || "https://6c31-2a09-bac6-d9d3-eaa-00-176-a2.ngrok-free.app/api/v1").replace(
   /\/+$/,
   "",
 );

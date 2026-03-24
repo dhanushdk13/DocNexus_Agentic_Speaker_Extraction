@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "env": {
+    "NEXT_PUBLIC_API_BASE": "/api/v1",
+    "API_PROXY_TARGET": "https://6c31-2a09-bac6-d9d3-eaa-00-176-a2.ngrok-free.app/api/v1"
+  }
+}
